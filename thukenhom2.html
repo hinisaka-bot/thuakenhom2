@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chế Định Thừa Kế - 35 Slides Đồ Họa Cartoon Vector</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700;800&display=swap');
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Lexend', sans-serif; }
+  body { background: #0c0f1d; color: #1e293b; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+  
+  /* Khung Viewport Slide 16:9 với Phông Nền Kem Tròn Trang Trí Orange Concept */
+  .slide-viewport { 
+    width: 1280px; 
+    height: 720px; 
+    background: linear-gradient(135deg, #fffbf5 0%, #fff3e0 100%); 
+    border-radius: 24px; 
+    overflow: hidden; 
+    position: relative; 
+    box-shadow: 0 25px 60px -10px rgba(249, 115, 22, 0.35); 
+    border: 3px solid #f97316; 
+  }
+
+  /* HỌA TIẾT TRANG TRÍ MẦU CAM XUNG QUANH SLIDE */
+  .slide-viewport::before {
+    content: '';
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 260px;
+    height: 260px;
+    background: radial-gradient(circle, rgba(249,115,22,0.18) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .slide-viewport::after {
+    content: '';
+    position: absolute;
+    bottom: 60px;
+    left: -100px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(251,191,36,0.15) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  .slide { display: none; width: 100%; height: 100%; padding: 40px 56px 85px 56px; position: absolute; top:0; left:0; z-index: 2; }
+  .slide.active { display: flex; flex-direction: column; }
+  
+  /* Dark Theme cho Slide Bìa & Kết thúc */
+  .slide.dark { background: linear-gradient(135deg, #0f172a 0%, #1a103c 100%); color: #f8fafc; }
+  
+  /* ANIMATIONS */
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes zoomIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+
+  .slide.active .category-badge { animation: slideDown 0.4s ease-out both; }
+  .slide.active .slide-title-text { animation: slideDown 0.4s 0.1s ease-out both; }
+  .slide.active .card:nth-child(1) { animation: slideUp 0.4s 0.15s ease-out both; }
+  .slide.active .card:nth-child(2) { animation: slideUp 0.4s 0.25s ease-out both; }
+  .slide.active .card:nth-child(3) { animation: slideUp 0.4s 0.35s ease-out both; }
+  .slide.active .highlight-box { animation: slideUp 0.4s 0.4s ease-out both; }
+  .slide.active .media-box { animation: zoomIn 0.5s 0.2s ease-out both; }
+
+  /* HEADER & BADGE */
+  .slide-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .category-badge { background: linear-gradient(135deg, #ffedd5, #fef3c7); color: #c2410c; padding: 6px 18px; border-radius: 999px; font-weight: 700; font-size: 14px; border: 1.5px solid #f97316; box-shadow: 0 4px 10px rgba(249,115,22,0.15); }
+  .dark .category-badge { background: rgba(249, 115, 22, 0.25); color: #fbbf24; border-color: #f97316; }
+  
+  .slide-title-text { font-size: 32px; font-weight: 800; color: #0f172a; }
+  .dark .slide-title-text { color: #f8fafc; }
+  
+  .content-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 32px; height: 100%; align-items: center; }
+  
+  /* CARDS THIẾT KẾ BO TRÒN CARTOON */
+  .card { background: #ffffff; border: 2px solid #fed7aa; border-left: 6px solid #f97316; border-radius: 16px; padding: 18px 22px; margin-bottom: 14px; box-shadow: 0 8px 20px -4px rgba(249, 115, 22, 0.08); transition: all 0.25s ease; position: relative; }
+  .card:hover { transform: translateY(-3px) scale(1.01); box-shadow: 0 12px 25px -4px rgba(249, 115, 22, 0.22); border-color: #ea580c; }
+  .card h4 { font-size: 19px; color: #c2410c; margin-bottom: 6px; font-weight: 700; }
+  .card p { font-size: 16px; color: #334155; line-height: 1.5; }
+  
+  .highlight-box { background: linear-gradient(135deg, #fff7ed, #fef3c7); border: 2px dashed #f97316; border-radius: 14px; padding: 14px 20px; color: #9a3412; font-size: 16px; font-weight: 700; margin-top: 10px; }
+  
+  /* KHUNG HÌNH CARTOON VECTOR VẼ THIẾT KẾ RIÊNG (NO PHOTO) */
+  .media-box { width: 100%; height: 420px; background: #ffffff; border-radius: 20px; border: 3px solid #f97316; overflow: hidden; position: relative; box-shadow: 0 12px 30px -5px rgba(249,115,22,0.2); display: flex; flex-direction: column; justify-content: center; align-items: center; }
+
+  /* CONTAINER ĐỒ HỌA CARTOON VECTOR VẼ TAY */
+  .vector-cartoon { width: 100%; height: 100%; padding: 24px; background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); color: #1e293b; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
+  .vector-cartoon.dark-bg { background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%); color: #ffffff; }
+
+  .cartoon-avatar-group { display: flex; justify-content: center; align-items: flex-end; gap: 16px; margin-bottom: 16px; }
+  .cartoon-avatar { font-size: 54px; filter: drop-shadow(0 6px 10px rgba(0,0,0,0.15)); transition: transform 0.3s ease; }
+  .cartoon-avatar:hover { transform: scale(1.15) rotate(-5deg); }
+  .cartoon-tag { background: #ffffff; border: 2px solid #f97316; padding: 6px 16px; border-radius: 999px; font-size: 14px; font-weight: 800; color: #ea580c; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+
+  /* THANH ĐIỀU HƯỚNG BÊN DƯỚI */
+  .controls-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 70px; background: rgba(255,255,255,0.96); border-top: 2px solid #fed7aa; display: flex; justify-content: space-between; align-items: center; padding: 0 32px; z-index: 100; backdrop-filter: blur(8px); transition: transform 0.3s ease, opacity 0.3s ease; }
+  .dark .controls-bar { background: rgba(15, 23, 42, 0.96); border-top: 2px solid rgba(249,115,22,0.4); }
+
+  /* TỰ ĐỘNG ẨN THANH ĐIỀU HƯỚNG KHI TRÌNH CHIẾU FULLSCREEN (RÊ CHUỘT DƯỚI DÁY MỚI HIỆN) */
+  :fullscreen .controls-bar,
+  :-webkit-full-screen .controls-bar {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  :fullscreen .controls-bar:hover,
+  :-webkit-full-screen .controls-bar:hover {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
+  .ctrl-btn { background: #ffffff; color: #1e293b; border: 1.5px solid #cbd5e1; padding: 9px 18px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; }
+  .ctrl-btn:hover { border-color: #f97316; color: #ea580c; background: #fff7ed; }
+  .ctrl-btn.primary { background: linear-gradient(135deg, #f97316, #ea580c); color: #ffffff; border: none; box-shadow: 0 4px 12px rgba(234,88,12,0.3); }
+  .ctrl-btn.primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(234,88,12,0.45); }
+  
+  .progress-wrap { display: flex; align-items: center; gap: 14px; flex: 1; max-width: 380px; margin: 0 20px; }
+  .progress-bar-bg { flex: 1; height: 8px; background: #e2e8f0; border-radius: 999px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; width: 2.85%; background: linear-gradient(to right, #f97316, #fbbf24); transition: width 0.3s ease; }
+  .page-indicator { font-size: 14px; font-weight: 800; color: #ea580c; white-space: nowrap; }
+
+  /* MODAL MỤC LỤC 35 SLIDES */
+  .toc-modal { display: none; position: absolute; inset: 0; background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(10px); z-index: 200; padding: 40px; }
+  .toc-content { background: #ffffff; width: 100%; height: 100%; border-radius: 18px; padding: 28px; overflow-y: auto; display: flex; flex-direction: column; border: 2px solid #f97316; }
+  .toc-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 18px; }
+  .toc-item { background: #fff7ed; border: 1px solid #fed7aa; padding: 10px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 700; color: #9a3412; transition: all 0.2s; text-align: center; }
+  .toc-item:hover { background: #f97316; color: #ffffff; border-color: #ea580c; transform: scale(1.03); }
+
+  /* MINIGAME STYLING */
+  .quiz-opt { background: #ffffff; border: 2px solid #fed7aa; border-radius: 12px; padding: 14px 20px; margin-bottom: 10px; cursor: pointer; font-size: 16px; font-weight: 600; color: #1e293b; transition: all 0.2s ease; }
+  .quiz-opt:hover { border-color: #f97316; background: #fff7ed; transform: translateX(4px); }
+  .feedback-box { padding: 14px 18px; border-radius: 10px; font-size: 15px; font-weight: 700; margin-top: 10px; display: none; }
+  .feedback-box.wrong { background: #fee2e2; color: #991b1b; border: 1.5px solid #fca5a5; }
+  .feedback-box.correct { background: #dcfce7; color: #166534; border: 1.5px solid #86efac; }
+</style>
+</head>
+<body>
+
+<div class="slide-viewport" id="viewport">
+
+  <!-- SLIDE 1: BÌA BÀI GIẢNG -->
+  <div class="slide dark active">
+    <div style="margin: auto 0; text-align: left;">
+      <span class="category-badge">🏛️ PHÁP LUẬT ĐẠI CƯƠNG</span>
+      <h1 style="font-size: 48px; font-weight: 800; margin: 20px 0 10px; background: linear-gradient(to right, #f97316, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">CHƯƠNG 3: LUẬT DÂN SỰ</h1>
+      <h2 style="font-size: 32px; font-weight: 600; color: #e2e8f0; margin-bottom: 30px;">CHẾ ĐỊNH THỪA KẾ</h2>
+      <div style="border-left: 5px solid #f97316; padding-left: 18px; background: rgba(255,255,255,0.05); padding-top: 10px; padding-bottom: 10px; border-radius: 0 10px 10px 0;">
+        <p style="font-size: 17px; color: #cbd5e1; font-weight: 600;">Đơn vị thực hiện: Nhóm 2 — Lớp 26DTC01</p>
+        <p style="font-size: 14px; color: #94a3b8; margin-top: 2px;">Năm học: 2026 – 2027</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: 3.1.1 KHÁI NIỆM THỪA KẾ -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.1 KHÁI NIỆM & QUYỀN THỪA KẾ</span><h3 class="slide-title-text">3.1.1 Khái niệm về Thừa kế</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>📦 Sự chuyển dịch di sản</h4><p>Chuyển di sản và một số quyền khác của người đã chết cho những người còn sống.</p></div>
+        <div class="card"><h4>⚖️ Căn cứ thực hiện</h4><p>Thực hiện theo Di chúc hoặc theo quy định của Pháp luật Dân sự.</p></div>
+        <div class="highlight-box">💡 Có quan hệ trực tiếp với Quyền sở hữu tài sản - một quyền cơ bản của con người.</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <div class="cartoon-avatar-group">
+            <span class="cartoon-avatar">🏡</span>
+            <span class="cartoon-avatar">➔</span>
+            <span class="cartoon-avatar">💰</span>
+          </div>
+          <div class="cartoon-tag">Sự Chuyển Dịch Di Sản</div>
+          <p style="font-size: 14px; color: #78716c; margin-top: 12px; font-weight: 600;">Từ người đã chết sang người còn sống</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: 3.1.2 QUYỀN THỪA KẾ -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.1 KHÁI NIỆM & QUYỀN THỪA KẾ</span><h3 class="slide-title-text">3.1.2 Hai Mặt Của Quyền Thừa Kế</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>1. Quyền để lại di sản</h4><p>Quyền cá nhân định đoạt tài sản của mình bằng di chúc hoặc để lại cho người thừa kế theo luật.</p></div>
+        <div class="card"><h4>2. Quyền hưởng di sản</h4><p>Quyền dân sự được nhận di sản thừa kế theo di chúc hoặc theo pháp luật.</p></div>
+        <div class="highlight-box">🛡️ Quyền dân sự cơ bản của cá nhân được pháp luật ghi nhận & bảo hộ.</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <div class="cartoon-avatar-group">
+            <div style="text-align: center;"><span class="cartoon-avatar">👴</span><div class="cartoon-tag" style="font-size:12px;">Để Lại</div></div>
+            <span class="cartoon-avatar" style="font-size:32px; color:#f97316;">⇄</span>
+            <div style="text-align: center;"><span class="cartoon-avatar">👦</span><div class="cartoon-tag" style="font-size:12px;">Hưởng</div></div>
+          </div>
+          <p style="font-size: 14px; color: #78716c; margin-top: 14px; font-weight: 600;">Quyền Dân Sự Song Phương Hợp Pháp</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: 3.2.1 NGUYÊN TẮC BẢO HỘ -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.2 NGUYÊN TẮC THỪA KẾ</span><h3 class="slide-title-text">3.2.1 Nguyên tắc Bảo hộ (Điều 626)</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Nhà nước bảo hộ quyền định đoạt</h4><p>Cá nhân có quyền lập di chúc để lại tài sản cho bất kỳ ai, chỉ định hoặc truất quyền thừa kế.</p></div>
+        <div class="card"><h4>Bảo hộ người thừa kế theo luật</h4><p>Bảo đảm quyền nhận di sản của những người thuộc diện thừa kế theo pháp luật.</p></div>
+        <div class="highlight-box">📜 Khẳng định tại Điều 626 Bộ luật Dân sự 2015.</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <span class="cartoon-avatar" style="font-size: 72px;">⚖️🛡️</span>
+          <div class="cartoon-tag" style="margin-top: 10px;">Pháp Luật Bảo Hộ</div>
+          <p style="font-size: 14px; color: #78716c; margin-top: 10px; font-weight: 600;">Đảm bảo an toàn pháp lý cho di sản</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: 3.2.2 NGUYÊN TẮC BÌNH ĐẲNG -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.2 NGUYÊN TẮC THỪA KẾ</span><h3 class="slide-title-text">3.2.2 Nguyên tắc Bình đẳng (Điều 610)</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Bình đẳng về quyền định đoạt</h4><p>Mọi cá nhân không phân biệt giới tính, tuổi tác, tôn giáo, địa vị đều có quyền lập di chúc.</p></div>
+        <div class="card"><h4>Bình đẳng giữa người thừa kế</h4><p>Các cá nhân cùng hàng thừa kế đều có quyền bình đẳng trong việc hưởng di sản.</p></div>
+        <div class="highlight-box">⚖️ Điều 610 BLDS 2015: Căn cứ bảo đảm quyền con người trong thừa kế.</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <div class="cartoon-avatar-group">
+            <span class="cartoon-avatar">👨‍🦰</span>
+            <span class="cartoon-avatar">👩‍🦱</span>
+            <span class="cartoon-avatar">👵</span>
+            <span class="cartoon-avatar">🧔</span>
+          </div>
+          <div class="cartoon-tag">Bình Đẳng Tuyệt Đối</div>
+          <p style="font-size: 13px; color: #78716c; margin-top: 10px; font-weight: 600;">Không phân biệt Giới tính · Tuổi tác · Tôn giáo</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: 3.2.3a TÔN TRỌNG ĐỊNH ĐOẠT (NGƯỜI CÓ TÀI SẢN) -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.2 NGUYÊN TẮC THỪA KẾ</span><h3 class="slide-title-text">3.2.3a Quyền Định Đoạt của Người Có Tài Sản</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Tự do ý chí định đoạt</h4><p>Quyền lập di chúc để lại di sản cho bất kỳ ai; có quyền sửa đổi, bổ sung, thay thế hoặc hủy bỏ di chúc.</p></div>
+        <div class="card"><h4>Quyền truất quyền thừa kế</h4><p>Có quyền không cho người thừa kế theo pháp luật được hưởng di sản.</p></div>
+        <div class="highlight-box">⚠️ Giới hạn pháp luật: Bị hạn chế bởi quy định tại Điều 644 BLDS 2015.</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <span class="cartoon-avatar" style="font-size: 68px;">📝✍️</span>
+          <div class="cartoon-tag" style="margin-top: 10px;">Tự Do Lập Di Chúc</div>
+          <p style="font-size: 14px; color: #78716c; margin-top: 8px; font-weight: 600;">Tôn trọng tuyệt đối ý chí cá nhân</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: 3.2.3b TÔN TRỌNG ĐỊNH ĐOẠT (NGƯỜI THỪA KẾ) -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.2 NGUYÊN TẮC THỪA KẾ</span><h3 class="slide-title-text">3.2.3b Quyền Định Đoạt của Người Thừa Kế</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Quyền nhận hoặc từ chối</h4><p>Người thừa kế có quyền tiếp nhận di sản hoặc lập văn bản từ chối nhận di sản.</p></div>
+        <div class="card"><h4>Hạn chế quyền từ chối</h4><p>Không được từ chối nhận di sản nhằm trốn tránh việc thực hiện nghĩa vụ tài sản đối với người khác.</p></div>
+        <div class="highlight-box">🛑 Đảm bảo sự công bằng và quyền lợi của các bên thứ ba liên quan.</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <div class="cartoon-avatar-group">
+            <span class="cartoon-avatar">✅</span>
+            <span class="cartoon-avatar">🤝</span>
+            <span class="cartoon-avatar">❌</span>
+          </div>
+          <div class="cartoon-tag">Quyền Tiếp Nhận / Từ Chối</div>
+          <p style="font-size: 14px; color: #78716c; margin-top: 10px; font-weight: 600;">Quyền tự quyết của người thừa kế</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: 3.3.1a NGƯỜI ĐỂ LẠI DI SẢN -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.3 QUY ĐỊNH CHUNG</span><h3 class="slide-title-text">3.3.1a Người Để Lại Di Sản Thừa Kế</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Chỉ có thể là cá nhân</h4><p>Người để lại di sản bắt buộc phải là cá nhân đã chết hoặc bị Tòa án tuyên bố là đã chết.</p></div>
+        <div class="card"><h4>Tài sản để lại</h4><p>Để lại tài sản riêng hoặc phần tài sản trong khối tài sản chung cho người còn sống.</p></div>
+        <div class="highlight-box">📌 Cơ quan, tổ chức KHÔNG THỂ là "người để lại di sản thừa kế".</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <span class="cartoon-avatar" style="font-size: 72px;">👨‍💼⚰️</span>
+          <div class="cartoon-tag" style="margin-top: 10px;">Chủ Thể Để Lại Di Sản</div>
+          <p style="font-size: 14px; color: #78716c; margin-top: 8px; font-weight: 600;">Chỉ duy nhất là Cá Nhân đã chết</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: 3.3.1b NGƯỜI THỪA KẾ (3 NHÓM CARTOON VECTOR) -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.3 QUY ĐỊNH CHUNG</span><h3 class="slide-title-text">3.3.1b Các Nhóm Chủ Thể Hưởng Thừa Kế</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>1. Cá nhân còn sống</h4><p>Còn sống vào thời điểm mở thừa kế.</p></div>
+        <div class="card"><h4>2. Thai nhi (Trường hợp đặc biệt)</h4><p>Thành thai trước thời điểm mở thừa kế và sinh ra còn sống.</p></div>
+        <div class="card"><h4>3. Cơ quan, Tổ chức</h4><p>Phải còn tồn tại vào thời điểm mở thừa kế (Hưởng theo di chúc).</p></div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <div class="cartoon-avatar-group">
+            <div style="text-align: center;"><span class="cartoon-avatar">👴👶</span><div class="cartoon-tag" style="font-size:11px;">Cá Nhân</div></div>
+            <div style="text-align: center;"><span class="cartoon-avatar">🤰</span><div class="cartoon-tag" style="font-size:11px;">Thai Nhi</div></div>
+            <div style="text-align: center;"><span class="cartoon-avatar">🏢</span><div class="cartoon-tag" style="font-size:11px;">Tổ Chức</div></div>
+          </div>
+          <div style="background: #ffffff; padding: 8px 16px; border-radius: 12px; border: 2px dashed #f97316; font-weight: 700; color: #9a3412; font-size: 13px; margin-top: 8px;">
+            Căn cứ Điều 613 Bộ luật Dân sự 2015
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: 3.3.1c CHẾT CÙNG THỜI ĐIỂM -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.3 QUY ĐỊNH CHUNG</span><h3 class="slide-title-text">3.3.1c Chết Cùng Thời Điểm (Điều 619)</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Quy tắc chung</h4><p>Những người có quyền thừa kế di sản của nhau mà chết cùng thời điểm thì KHÔNG được thừa kế di sản của nhau.</p></div>
+        <div class="card"><h4>Phân chia di sản</h4><p>Di sản của mỗi người do người thừa kế riêng của người đó hưởng.</p></div>
+        <div class="highlight-box">🔄 Ngoại lệ: Áp dụng Thừa kế thế vị theo quy định tại Điều 652 BLDS 2015.</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <span class="cartoon-avatar" style="font-size: 64px;">⏱️❌⚰️</span>
+          <div class="cartoon-tag" style="margin-top: 10px;">Không Thừa Kế Lẫn Nhau</div>
+          <p style="font-size: 14px; color: #78716c; margin-top: 8px; font-weight: 600;">Áp dụng khi hai người chết cùng thời điểm</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: 3.3.2a DI SẢN THỪA KẾ (SƠ ĐỒ ESTATE) -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.3 QUY ĐỊNH CHUNG</span><h3 class="slide-title-text">3.3.2a Cấu Thành Khối Di Sản (Estate)</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Tài sản riêng của người chết</h4><p>Tạo ra bằng thu nhập hợp pháp, tiền lương, thưởng, tài sản riêng trước hôn nhân...</p></div>
+        <div class="card"><h4>Phần trong tài sản chung</h4><p>Phần tài sản của người chết trong khối tài sản chung hợp nhất với vợ/chồng hoặc người khác.</p></div>
+        <div class="highlight-box">⚠️ Bao gồm: Vật, tiền, giấy tờ có giá (cổ phiếu) & quyền tài sản.</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <div style="font-size: 15px; font-weight: 800; color: #ea580c; margin-bottom: 16px;">SƠ ĐỒ KHỐI DI SẢN (ESTATE)</div>
+          <div style="display: flex; justify-content: center; align-items: center; gap: 14px; width: 100%;">
+            <div style="background: #fff; padding: 10px; border-radius: 12px; border: 2px solid #f97316;">
+              <div style="font-size: 26px;">🏡 💰</div>
+              <div style="font-size: 11px; font-weight: 700; color: #ea580c;">TS Riêng</div>
+            </div>
+            <div style="font-size: 20px; color: #f97316;">⟷</div>
+            <div style="background: linear-gradient(135deg, #f97316, #ea580c); padding: 14px 20px; border-radius: 999px; font-size: 18px; font-weight: 800; color: #fff;">
+              DI SẢN
+            </div>
+            <div style="font-size: 20px; color: #f97316;">⟷</div>
+            <div style="background: #fff; padding: 10px; border-radius: 12px; border: 2px solid #f97316;">
+              <div style="font-size: 26px;">📜 🚗</div>
+              <div style="font-size: 11px; font-weight: 700; color: #ea580c;">Phần TS Chung</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: 3.3.2b BÀI TOÁN ÔNG A -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.3.2 VÍ DỤ THỰC TẾ</span><h3 class="slide-title-text">3.3.2b Bài Toán Phân Tích Di Sản Ông A</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Tài sản chung với Bà B (Vợ)</h4><p>Ngôi nhà 1 tỷ + Mảnh đất 600tr = 1,6 tỷ ➔ Phần của A = <strong>800 triệu</strong>.</p></div>
+        <div class="card"><h4>Tài sản chung với Bà H</h4><p>Mua nhà 500tr (A góp 300tr) ➔ Phần của A = <strong>300 triệu</strong>.</p></div>
+        <div class="highlight-box">🧮 Tổng di sản thừa kế của Ông A = 800tr + 300tr = 1,1 TỶ ĐỒNG.</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <div style="font-size: 64px; font-weight: 800; color: #ea580c; line-height: 1;">1,1 TỶ</div>
+          <div class="cartoon-tag" style="margin-top: 14px;">Di Sản Của Ông A</div>
+          <p style="font-size: 13px; color: #78716c; margin-top: 8px; font-weight: 600;">800 triệu (Nhà A-B) + 300 triệu (Góp H)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 13: 3.3.3 & 3.3.4 THỜI ĐIỂM & ĐỊA ĐIỂM MỞ THỪA KẾ -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.3 QUY ĐỊNH CHUNG</span><h3 class="slide-title-text">3.3.3 & 3.3.4 Mở Thừa Kế</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Thời điểm mở thừa kế</h4><p>Là thời điểm người có tài sản chết hoặc ngày Tòa án tuyên bố người đó đã chết có hiệu lực.</p></div>
+        <div class="card"><h4>Địa điểm mở thừa kế</h4><p>Nơi cư trú cuối cùng của người để lại di sản; nếu không xác định được thì là nơi có toàn bộ/phần lớn di sản.</p></div>
+        <div class="highlight-box">📍 Xác định thời điểm & địa điểm để tính thời hiệu và thẩm quyền giải quyết.</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <span class="cartoon-avatar" style="font-size: 68px;">📅📍</span>
+          <div class="cartoon-tag" style="margin-top: 10px;">Căn Cứ Phát Sinh Thừa Kế</div>
+          <p style="font-size: 14px; color: #78716c; margin-top: 8px; font-weight: 600;">Xác định thời hiệu & thẩm quyền giải quyết</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 14: 3.3.5 TỪ CHỐI NHẬN DI SẢN -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.3 QUY ĐỊNH CHUNG</span><h3 class="slide-title-text">3.3.5 Từ Chối Nhận Di Sản</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Thủ tục bắt buộc</h4><p>Phải lập thành văn bản và gửi đến người quản lý di sản, những người thừa kế khác trước thời điểm phân chia.</p></div>
+        <div class="card"><h4>Điều kiện vô hiệu</h4><p>Việc từ chối KHÔNG có hiệu lực nếu nhằm trốn tránh thực hiện nghĩa vụ tài sản đối với người khác.</p></div>
+        <div class="highlight-box">📜 Là văn bản đơn phương thể hiện quyền tự quyết của người thừa kế.</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <span class="cartoon-avatar" style="font-size: 68px;">📜🙅‍♂️</span>
+          <div class="cartoon-tag" style="margin-top: 10px;">Lập Văn Bản Từ Chối</div>
+          <p style="font-size: 14px; color: #78716c; margin-top: 8px; font-weight: 600;">Phải lập trước thời điểm phân chia di sản</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 15: 3.3.6 & 3.3.7 QUYỀN HƯỞNG DI SẢN -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.3 QUY ĐỊNH CHUNG</span><h3 class="slide-title-text">3.3.6 & 3.3.7 Trường Hợp Đặc Biệt</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Tài sản không người nhận (Điều 622)</h4><p>Không có người thừa kế hoặc từ chối nhận ➔ Di sản thuộc về Nhà nước sau khi thực hiện nghĩa vụ.</p></div>
+        <div class="card"><h4>Người không quyền hưởng (Điều 621)</h4><p>Vi phạm nghĩa vụ đạo đức, xâm phạm tính mạng/sức khỏe người để lại di sản ➔ Bị tước quyền.</p></div>
+        <div class="highlight-box">🔓 Ngoại lệ Điều 621: Vẫn được hưởng nếu người để lại di sản đã biết nhưng vẫn cho hưởng theo di chúc.</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <span class="cartoon-avatar" style="font-size: 68px;">🏛️⛔</span>
+          <div class="cartoon-tag" style="margin-top: 10px;">Tước Quyền Hưởng Thừa Kế</div>
+          <p style="font-size: 14px; color: #78716c; margin-top: 8px; font-weight: 600;">Quy định tại Điều 621 & 622 BLDS 2015</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 16: 3.3.8 THỜI HIỆU THỪA KẾ -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.3 QUY ĐỊNH CHUNG</span><h3 class="slide-title-text">3.3.8 Thời Hiệu Thừa Kế (Điều 623)</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>30 Năm — Bất động sản</h4><p>Thời hiệu chia di sản là 30 năm kể từ thời điểm mở thừa kế.</p></div>
+        <div class="card"><h4>10 Năm — Động sản & Xác nhận quyền</h4><p>Thời hiệu chia động sản hoặc xác nhận/bác bỏ quyền thừa kế.</p></div>
+        <div class="highlight-box">⏱️ 03 Năm: Thời hiệu yêu cầu người thừa kế thực hiện nghĩa vụ tài sản do người chết để lại.</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <div style="font-size: 40px; font-weight: 800; color: #ea580c;">⌛ 30 - 10 - 3</div>
+          <div class="cartoon-tag" style="margin-top: 10px;">Mốc Thời Hiệu Luật Định</div>
+          <p style="font-size: 13px; color: #78716c; margin-top: 8px; font-weight: 600;">30 năm BĐS · 10 năm Động sản · 03 năm Nghĩa vụ</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 17: 3.4.1 & 3.4.2 DI CHÚC & ĐẶC ĐIỂM -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.4 THỪA KẾ THEO DI CHÚC</span><h3 class="slide-title-text">3.4.1 & 3.4.2 Di Chúc & 4 Đặc Điểm</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Khái niệm Di chúc</h4><p>Là sự thể hiện ý chí của cá nhân nhằm chuyển tài sản của mình cho người khác sau khi chết.</p></div>
+        <div class="card"><h4>4 Đặc điểm pháp lý cơ bản</h4><p>1. Giao dịch dân sự đơn phương.<br>2. Định đoạt tài sản sau khi chết.<br>3. Giao dịch trọng hình thức.<br>4. Hiệu lực sau khi người lập chết.</p></div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <span class="cartoon-avatar" style="font-size: 68px;">📜🔏</span>
+          <div class="cartoon-tag" style="margin-top: 10px;">Giao Dịch Đơn Phương</div>
+          <p style="font-size: 14px; color: #78716c; margin-top: 8px; font-weight: 600;">Định đoạt tài sản cá nhân sau khi chết</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 18: 3.4.3 NGƯỜI LẬP DI CHÚC (VECTOR CARTOON) -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.4 THỪA KẾ THEO DI CHÚC</span><h3 class="slide-title-text">3.4.3 Điều Kiện Người Lập Di Chúc</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Từ đủ 15 đến dưới 18 tuổi</h4><p>Được lập di chúc nếu được Cha, Mẹ hoặc người giám hộ đồng ý bằng văn bản.</p></div>
+        <div class="card"><h4>Người từ đủ 18 tuổi trở lên</h4><p>Hoàn toàn tự do lập di chúc định đoạt tài sản nếu đáp ứng năng lực nhận thức.</p></div>
+        <div class="highlight-box">🧠 Yêu cầu năng lực: Minh mẫn, sáng suốt; không bị lừa dối, đe dọa hay cưỡng ép.</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <div class="cartoon-avatar-group">
+            <div style="text-align: center;"><span class="cartoon-avatar">👦</span><div class="cartoon-tag" style="font-size:11px;">15-18T (Cần Cha Mẹ)</div></div>
+            <div style="text-align: center;"><span class="cartoon-avatar">👨</span><div class="cartoon-tag" style="font-size:11px;">18T+ (Tự Do Lập)</div></div>
+          </div>
+          <p style="font-size: 13px; color: #78716c; margin-top: 10px; font-weight: 600;">Yêu cầu tuyệt đối: Minh mẫn & Sáng suốt</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 19: 3.4.4 & 3.4.5 DI CHÚC VĂN BẢN -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.4 THỪA KẾ THEO DI CHÚC</span><h3 class="slide-title-text">3.4.4 & 3.4.5 Di Chúc Bằng Văn Bản</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>1. Không có người làm chứng</h4><p>Người lập di chúc phải tự tay viết và ký vào bản di chúc (Điều 633).</p></div>
+        <div class="card"><h4>2. Có người làm chứng</h4><p>Nếu đánh máy hoặc nhờ người viết hộ ➔ Phải có ít nhất 02 người làm chứng (Điều 634).</p></div>
+        <div class="card"><h4>3. Có công chứng / chứng thực</h4><p>Lập tại phòng công chứng hoặc UBND cấp xã (Điều 635, 636).</p></div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <span class="cartoon-avatar" style="font-size: 68px;">🖊️📜🏛️</span>
+          <div class="cartoon-tag" style="margin-top: 10px;">Hình Thức Di Chúc Văn Bản</div>
+          <p style="font-size: 14px; color: #78716c; margin-top: 8px; font-weight: 600;">Tự viết · Có người làm chứng · Công chứng</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 20: 3.4.5 DI CHÚC MIỆNG -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.4 THỪA KẾ THEO DI CHÚC</span><h3 class="slide-title-text">3.4.5 Di Chúc Miệng (Khẩn Cấp)</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Điều kiện áp dụng</h4><p>Tính mạng bị đe dọa khẩn cấp và không thể lập di chúc bằng văn bản.</p></div>
+        <div class="card"><h4>Thủ tục công nhận</h4><p>Thể hiện ý chí trước ít nhất 02 người làm chứng. Ngay sau đó người làm chứng ghi chép lại, cùng ký tên/điểm chỉ.</p></div>
+        <div class="highlight-box">⏱️ Trong 05 ngày làm việc phải được Công chứng/Chứng thực. Sau 03 tháng nếu còn sống minh mẫn ➔ Tự hủy bỏ.</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <span class="cartoon-avatar" style="font-size: 68px;">🗣️🚑</span>
+          <div class="cartoon-tag" style="margin-top: 10px;">Trường Hợp Khẩn Cấp</div>
+          <p style="font-size: 14px; color: #78716c; margin-top: 8px; font-weight: 600;">Xác thực 05 ngày · Tự hủy sau 03 tháng</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 21: 3.4.6 HIỆU LỰC DI CHÚC -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.4 THỪA KẾ THEO DI CHÚC</span><h3 class="slide-title-text">3.4.6 Hiệu Lực Của Di Chúc (Điều 643)</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Thời điểm phát sinh</h4><p>Di chúc có hiệu lực pháp luật kể từ thời điểm mở thừa kế.</p></div>
+        <div class="card"><h4>Trường hợp vô hiệu</h4><p>Người thừa kế chết trước/cùng thời điểm với người lập di chúc; hoặc cơ quan/tổ chức không còn tồn tại.</p></div>
+        <div class="highlight-box">📜 Lập nhiều bản di chúc cho 1 tài sản ➔ Chỉ bản di chúc sau cùng có hiệu lực.</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <span class="cartoon-avatar" style="font-size: 68px;">✨📜</span>
+          <div class="cartoon-tag" style="margin-top: 10px;">Bản Di Chúc Sau Cùng</div>
+          <p style="font-size: 14px; color: #78716c; margin-top: 8px; font-weight: 600;">Ưu tiên hiệu lực pháp lý bản mới nhất</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 22: 3.4.7 THỪA KẾ KHÔNG PHỤ THUỘC DI CHÚC (2/3 CHART) -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.4 THỪA KẾ THEO DI CHÚC</span><h3 class="slide-title-text">3.4.7 Thừa Kế Bắt Buộc (Điều 644)</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Suất thừa kế bắt buộc</h4><p>Hưởng bằng <strong>2/3 suất</strong> của một người thừa kế theo pháp luật (nếu chia theo luật).</p></div>
+        <div class="card"><h4>Các đối tượng được bảo vệ</h4><p>1. Con chưa thành niên; Cha, mẹ, vợ, chồng.<br>2. Con đã thành niên nhưng mất khả năng lao động.</p></div>
+        <div class="highlight-box">🛡️ Áp dụng dù di chúc không cho hưởng hoặc chỉ cho hưởng ít hơn 2/3 suất.</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <div style="font-size: 72px; font-weight: 800; color: #ea580c; line-height: 1;">2/3</div>
+          <div class="cartoon-tag" style="margin-top: 12px;">Suất Thừa Kế Bắt Buộc</div>
+          <p style="font-size: 13px; color: #78716c; margin-top: 8px; font-weight: 600;">Bảo vệ Con chưa thành niên, Cha, Mẹ, Vợ, Chồng</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 23: 3.4.8 & 3.4.9 DI TẶNG & THỜ CÚNG -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.4 THỪA KẾ THEO DI CHÚC</span><h3 class="slide-title-text">3.4.8 & 3.4.9 Di Tặng & Thờ Cúng</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Di tặng (Điều 646)</h4><p>Dành một phần di sản để tặng cho người khác. Người được di tặng không phải chịu nghĩa vụ tài sản.</p></div>
+        <div class="card"><h4>Di sản dùng vào việc thờ cúng (Điều 645)</h4><p>Dành một phần di sản thờ cúng ➔ Phần này không được chia thừa kế mà giao cho người quản lý.</p></div>
+        <div class="highlight-box">⚠️ Nếu toàn bộ di sản không đủ trả nợ ➔ Không được dành phần di sản thờ cúng / di tặng.</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <span class="cartoon-avatar" style="font-size: 68px;">🎁🙏</span>
+          <div class="cartoon-tag" style="margin-top: 10px;">Di Tặng & Thờ Cúng</div>
+          <p style="font-size: 14px; color: #78716c; margin-top: 8px; font-weight: 600;">Căn cứ Điều 645 & Điều 646 BLDS 2015</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 24: 3.5.1 THỪA KẾ THEO PHÁP LUẬT -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.5 THỪA KẾ THEO PHÁP LUẬT</span><h3 class="slide-title-text">3.5.1 Khái Niệm & Trường Hợp Áp Dụng</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Khái niệm</h4><p>Là thừa kế theo hàng thừa kế, điều kiện và trình tự do pháp luật quy định.</p></div>
+        <div class="card"><h4>4 Trường hợp áp dụng chủ yếu</h4><p>1. Không có di chúc.<br>2. Di chúc không hợp pháp.<br>3. Người thừa kế theo di chúc chết trước/cùng thời điểm.<br>4. Phần di sản chưa được định đoạt trong di chúc.</p></div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <span class="cartoon-avatar" style="font-size: 68px;">📘⚖️</span>
+          <div class="cartoon-tag" style="margin-top: 10px;">Chia Thừa Kế Theo Luật</div>
+          <p style="font-size: 14px; color: #78716c; margin-top: 8px; font-weight: 600;">Căn cứ quy định tại Điều 650 BLDS 2015</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 25: 3.5.2 & 3.5.3 BA HÀNG THỪA KẾ (SƠ ĐỒ CARTOON) -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.5 THỪA KẾ THEO PHÁP LUẬT</span><h3 class="slide-title-text">3.5.2 & 3.5.3 Ba Hàng Thừa Kế (Điều 651)</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Hàng 1</h4><p>Vợ, chồng; cha/mẹ đẻ, cha/mẹ nuôi; con đẻ, con nuôi của người chết.</p></div>
+        <div class="card"><h4>Hàng 2</h4><p>Ông/bà nội ngoại; anh/chị/em ruột; cháu ruột gọi người chết là ông/bà.</p></div>
+        <div class="card"><h4>Hàng 3</h4><p>Cụ nội ngoại; bác/chú/cậu/cô/dì ruột; cháu ruột; chắt ruột.</p></div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <div style="font-size: 16px; font-weight: 800; color: #ea580c; margin-bottom: 14px;">3 HÀNG THỪA KẾ PHÁP LUẬT</div>
+          <div style="background: #fff; padding: 8px 16px; border-radius: 8px; border-left: 4px solid #f97316; margin-bottom: 6px; width: 100%; text-align: left; font-size: 13px;">
+            🥇 <strong>HÀNG 1:</strong> Vợ/Chồng, Cha/Mẹ, Con
+          </div>
+          <div style="background: #fff; padding: 8px 16px; border-radius: 8px; border-left: 4px solid #fbbf24; margin-bottom: 6px; width: 100%; text-align: left; font-size: 13px;">
+            🥈 <strong>HÀNG 2:</strong> Ông/Bà, Anh/Chị/Em, Cháu
+          </div>
+          <div style="background: #fff; padding: 8px 16px; border-radius: 8px; border-left: 4px solid #94a3b8; width: 100%; text-align: left; font-size: 13px;">
+            🥉 <strong>HÀNG 3:</strong> Cụ, Bác/Chú/Cô/Dì, Chắt
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 26: 3.5.4 & 3.5.5 THỪA KẾ THẾ VỊ (SƠ ĐỒ TRỰC HỆ) -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.5 THỪA KẾ THEO PHÁP LUẬT</span><h3 class="slide-title-text">3.5.4 & 3.5.5 Thừa Kế Thế Vị (Điều 652)</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Khái niệm Thế vị</h4><p>Con của người để lại di sản chết trước/cùng thời điểm ➔ Cháu được hưởng phần cha/mẹ đáng lẽ được hưởng.</p></div>
+        <div class="card"><h4>Đặc điểm thế vị</h4><p>Xác định theo dòng trực hệ (Cháu thế vị Cha/Mẹ; Chắt thế vị Cha/Mẹ của chắt).</p></div>
+        <div class="highlight-box">🌿 Nhóm người thế vị cùng chia đều phần di sản của người mà mình thế vị.</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <div style="font-size: 15px; font-weight: 800; color: #ea580c; margin-bottom: 10px;">DÒNG TRỰC HỆ THẾ VỊ</div>
+          <div style="border: 2px solid #f97316; padding: 6px 14px; border-radius: 8px; background: #fff; font-weight: 800; font-size:13px;">👴 Ông / Bà (Để lại di sản)</div>
+          <div style="font-size: 16px; color: #ea580c; margin: 2px 0;">↓ (Chết trước/cùng)</div>
+          <div style="border: 2px dashed #94a3b8; padding: 6px 14px; border-radius: 8px; background: #f1f5f9; color: #64748b; font-weight: 700; font-size:12px;">👨 Cha / Mẹ (Đã chết)</div>
+          <div style="font-size: 16px; color: #ea580c; margin: 2px 0;">↓ (Hưởng thế vị)</div>
+          <div style="border: 2px solid #16a34a; padding: 6px 14px; border-radius: 8px; background: #dcfce7; color: #15803d; font-weight: 800; font-size:13px;">👦 Cháu / Chắt (Thế Vị)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 27: 3.6.1 & 3.6.2 ƯU TIÊN THANH TOÁN -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.6 THANH TOÁN & PHÂN CHIA</span><h3 class="slide-title-text">3.6.1 & 3.6.2 Ưu Tiên Thanh Toán (Điều 658)</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Top 1 - 3 Chi phí ưu tiên</h4><p>1. Chi phí hợp lý mai táng.<br>2. Tiền cấp dưỡng còn thiếu.<br>3. Chi phí bảo quản di sản.</p></div>
+        <div class="card"><h4>Top 4 - 10 Nghĩa vụ tài sản</h4><p>Trợ cấp living ➔ Tiền công ➔ Bồi thường ➔ Thuế ngân sách ➔ Các khoản nợ khác ➔ Tiền phạt.</p></div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <div style="font-size: 56px; font-weight: 800; color: #ea580c;">10</div>
+          <div class="cartoon-tag" style="margin-top: 8px;">Khoản Ưu Tiên Thanh Toán</div>
+          <p style="font-size: 13px; color: #78716c; margin-top: 8px; font-weight: 600;">Trật tự thanh toán theo Điều 658 BLDS 2015</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 28: 3.6.3 & 3.6.4 PHÂN CHIA DI SẢN -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.6 THANH TOÁN & PHÂN CHIA</span><h3 class="slide-title-text">3.6.3 & 3.6.4 Phân Chia Di Sản Thực Tế</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Phân chia theo hiện vật</h4><p>Ưu tiên chia di sản bằng hiện vật; nếu không chia đều được thì thỏa thuận định giá hoặc bán đi để chia.</p></div>
+        <div class="card"><h4>Dành phần cho thai nhi</h4><p>Nếu có người thừa kế cùng hàng đã thành thai ➔ Phải dành lại 01 phần bằng các người thừa kế khác.</p></div>
+        <div class="highlight-box">👶 Nếu thai nhi sinh ra còn sống ➔ Được hưởng; sinh ra đã chết ➔ Chia cho người khác.</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <span class="cartoon-avatar" style="font-size: 68px;">🏡✂️👶</span>
+          <div class="cartoon-tag" style="margin-top: 10px;">Phân Chia Hiện Vật</div>
+          <p style="font-size: 14px; color: #78716c; margin-top: 8px; font-weight: 600;">Dành 1 phần bắt buộc cho Thai Nhi hợp pháp</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 29: 3.6.5 HẠN CHẾ PHÂN CHIA DI SẢN -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">3.6 THANH TOÁN & PHÂN CHIA</span><h3 class="slide-title-text">3.6.5 Hạn Chế Phân Chia Di Sản</h3></div>
+    <div class="content-grid">
+      <div>
+        <div class="card"><h4>Theo ý chí di chúc / thỏa thuận</h4><p>Chỉ phân chia di sản sau khi đã hết thời hạn ghi trong di chúc hoặc thỏa thuận.</p></div>
+        <div class="card"><h4>Tòa án quyết định hoãn chia</h4><p>Nơi chia di sản ảnh hưởng nghiêm trọng đến đời sống vợ/chồng còn sống ➔ Tòa án hoãn chia tối đa <strong>03 năm</strong>.</p></div>
+        <div class="highlight-box">⏳ Được gia hạn thêm 01 lần nhưng không quá 03 năm (Tổng cộng tối đa 6 năm).</div>
+      </div>
+      <div class="media-box">
+        <div class="vector-cartoon">
+          <div style="font-size: 52px; font-weight: 800; color: #ea580c;">3 + 3</div>
+          <div class="cartoon-tag" style="margin-top: 8px;">Năm Tòa Án Hoãn Chia</div>
+          <p style="font-size: 13px; color: #78716c; margin-top: 8px; font-weight: 600;">Bảo vệ đời sống Vợ/Chồng còn sống</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 30: MINIGAME 01 -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">🎮 MINIGAME — CÂU 01 / 05</span><h3 class="slide-title-text">Trắc Nghiệm Tình Huống Thừa Kế</h3></div>
+    <div class="content-grid">
+      <div>
+        <p style="font-size: 18px; font-weight: 700; margin-bottom: 14px; color: #0f172a;">
+          Câu 1: Ông A lập di chúc cho bạn thân toàn bộ tài sản. Vợ B còn sống, con C 25 tuổi khỏe mạnh. Vợ B được hưởng bao nhiêu?
+        </p>
+        <div class="quiz-opt" onclick="checkAnswer(1, false)">A. Không được hưởng vì di chúc có hiệu lực.</div>
+        <div class="quiz-opt" onclick="checkAnswer(1, true)">B. Được hưởng ít nhất 2/3 suất thừa kế theo pháp luật.</div>
+        <div class="quiz-opt" onclick="checkAnswer(1, false)">C. Đương nhiên hưởng 1/2 toàn bộ khối di sản.</div>
+        <div id="fb-1" class="feedback-box"></div>
+      </div>
+      <div class="media-box" id="quiz-icon-1">
+        <div class="vector-cartoon">
+          <span class="cartoon-avatar" style="font-size: 64px;">❓🤔</span>
+          <div class="cartoon-tag" style="margin-top: 10px;">Thử Tài Kiến Thức</div>
+          <p style="font-size: 13px; color: #78716c; margin-top: 6px;">Chọn câu trả lời chính xác nhất</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 31: MINIGAME 02 -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">🎮 MINIGAME — CÂU 02 / 05</span><h3 class="slide-title-text">Trắc Nghiệm Tình Huống Thừa Kế</h3></div>
+    <div class="content-grid">
+      <div>
+        <p style="font-size: 18px; font-weight: 700; margin-bottom: 14px; color: #0f172a;">
+          Câu 2: Thời hiệu để người thừa kế yêu cầu chia di sản là Bất động sản tính từ thời điểm mở thừa kế là bao lâu?
+        </p>
+        <div class="quiz-opt" onclick="checkAnswer(2, false)">A. 10 năm.</div>
+        <div class="quiz-opt" onclick="checkAnswer(2, true)">B. 30 năm.</div>
+        <div class="quiz-opt" onclick="checkAnswer(2, false)">C. Không giới hạn thời gian.</div>
+        <div id="fb-2" class="feedback-box"></div>
+      </div>
+      <div class="media-box" id="quiz-icon-2">
+        <div class="vector-cartoon">
+          <span class="cartoon-avatar" style="font-size: 64px;">⏱️🏠</span>
+          <div class="cartoon-tag" style="margin-top: 10px;">Thời Hiệu Thừa Kế BĐS</div>
+          <p style="font-size: 13px; color: #78716c; margin-top: 6px;">Căn cứ Điều 623 BLDS 2015</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 32: MINIGAME 03 -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">🎮 MINIGAME — CÂU 03 / 05</span><h3 class="slide-title-text">Trắc Nghiệm Tình Huống Thừa Kế</h3></div>
+    <div class="content-grid">
+      <div>
+        <p style="font-size: 18px; font-weight: 700; margin-bottom: 14px; color: #0f172a;">
+          Câu 3: Di chúc miệng sau bao lâu nếu người lập di chúc còn sống, minh mẫn thì đương nhiên bị hủy bỏ?
+        </p>
+        <div class="quiz-opt" onclick="checkAnswer(3, false)">A. 01 tháng.</div>
+        <div class="quiz-opt" onclick="checkAnswer(3, true)">B. 03 tháng.</div>
+        <div class="quiz-opt" onclick="checkAnswer(3, false)">C. 06 tháng.</div>
+        <div id="fb-3" class="feedback-box"></div>
+      </div>
+      <div class="media-box" id="quiz-icon-3">
+        <div class="vector-cartoon">
+          <span class="cartoon-avatar" style="font-size: 64px;">🗣️⌛</span>
+          <div class="cartoon-tag" style="margin-top: 10px;">Di Chúc Miệng</div>
+          <p style="font-size: 13px; color: #78716c; margin-top: 6px;">Căn cứ Khoản 5 Điều 630</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 33: MINIGAME 04 -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">🎮 MINIGAME — CÂU 04 / 05</span><h3 class="slide-title-text">Trắc Nghiệm Tình Huống Thừa Kế</h3></div>
+    <div class="content-grid">
+      <div>
+        <p style="font-size: 18px; font-weight: 700; margin-bottom: 14px; color: #0f172a;">
+          Câu 4: Người nào sau đây thuộc Hàng thừa kế thứ nhất theo pháp luật của người chết?
+        </p>
+        <div class="quiz-opt" onclick="checkAnswer(4, false)">A. Anh ruột, chị ruột, em ruột.</div>
+        <div class="quiz-opt" onclick="checkAnswer(4, true)">B. Cha đẻ, mẹ đẻ, cha nuôi, mẹ nuôi, con đẻ, con nuôi, vợ, chồng.</div>
+        <div class="quiz-opt" onclick="checkAnswer(4, false)">C. Ông nội, bà nội, ông ngoại, bà ngoại.</div>
+        <div id="fb-4" class="feedback-box"></div>
+      </div>
+      <div class="media-box" id="quiz-icon-4">
+        <div class="vector-cartoon">
+          <span class="cartoon-avatar" style="font-size: 64px;">🥇👨‍👩‍👧‍👦</span>
+          <div class="cartoon-tag" style="margin-top: 10px;">Hàng Thừa Kế Thứ Nhất</div>
+          <p style="font-size: 13px; color: #78716c; margin-top: 6px;">Căn cứ Điều 651 BLDS 2015</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 34: MINIGAME 05 -->
+  <div class="slide">
+    <div class="slide-header"><span class="category-badge">🎮 MINIGAME — CÂU 05 / 05</span><h3 class="slide-title-text">Trắc Nghiệm Tình Huống Thừa Kế</h3></div>
+    <div class="content-grid">
+      <div>
+        <p style="font-size: 18px; font-weight: 700; margin-bottom: 14px; color: #0f172a;">
+          Câu 5: Trong thứ tự ưu tiên thanh toán nghĩa vụ di sản (Điều 658), khoản chi phí nào được xếp ƯU TIÊN SỐ 1?
+        </p>
+        <div class="quiz-opt" onclick="checkAnswer(5, true)">A. Chi phí hợp lý theo tập quán cho việc mai táng.</div>
+        <div class="quiz-opt" onclick="checkAnswer(5, false)">B. Thuế và các khoản nợ Ngân sách nhà nước.</div>
+        <div class="quiz-opt" onclick="checkAnswer(5, false)">C. Tiền bồi thường thiệt hại cho bên bị vi phạm.</div>
+        <div id="fb-5" class="feedback-box"></div>
+      </div>
+      <div class="media-box" id="quiz-icon-5">
+        <div class="vector-cartoon">
+          <span class="cartoon-avatar" style="font-size: 64px;">🥇💰</span>
+          <div class="cartoon-tag" style="margin-top: 10px;">Ưu Tiên Hàng Đầu</div>
+          <p style="font-size: 13px; color: #78716c; margin-top: 6px;">Căn cứ Điều 658 BLDS 2015</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 35: TỔNG KẾT & CẢM ƠN -->
+  <div class="slide dark">
+    <div style="margin: auto 0; text-align: center; width: 100%;">
+      <span class="category-badge">🏛️ TỔNG KẾT BÀI GIẢNG</span>
+      <h1 style="font-size: 46px; font-weight: 800; margin: 24px 0 16px; background: linear-gradient(to right, #f97316, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">CẢM ƠN THẦY VÀ CÁC BẠN ĐÃ LẮNG NGHE!</h1>
+      <p style="font-size: 20px; color: #cbd5e1; font-weight: 600; margin-bottom: 30px;">CHẾ ĐỊNH THỪA KẾ — BỘ LUẬT DÂN SỰ 2015</p>
+      <div style="display: inline-block; background: rgba(255,255,255,0.08); padding: 12px 32px; border-radius: 999px; border: 1px solid rgba(249,115,22,0.4); color: #f97316; font-weight: 700;">
+        NHÓM 2 — 26DTC01
+      </div>
+    </div>
+  </div>
+
+  <!-- THANH ĐIỀU HƯỚNG CONTROL BAR -->
+  <div class="controls-bar" id="controlsBar">
+    <button class="ctrl-btn" onclick="prevSlide()">← Trang trước</button>
+    <button class="ctrl-btn" onclick="toggleTOC()">☰ Mục lục</button>
+    
+    <div class="progress-wrap">
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+      <span class="page-indicator" id="pageIndicator">Slide 1 / 35</span>
+    </div>
+
+    <button class="ctrl-btn primary" onclick="nextSlide()">Trang sau →</button>
+    <button class="ctrl-btn" onclick="toggleFullscreen()">🖥️ Trình chiếu toàn màn hình</button>
+  </div>
+
+  <!-- MODAL MỤC LỤC 35 SLIDES -->
+  <div class="toc-modal" id="tocModal">
+    <div class="toc-content">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="font-size: 24px; font-weight: 800; color: #ea580c;">DANH SÁCH 35 SLIDES BÀI GIẢNG</h3>
+        <button class="ctrl-btn primary" onclick="toggleTOC()">Đóng ✕</button>
+      </div>
+      <div class="toc-grid" id="tocGrid"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const indicator = document.getElementById('pageIndicator');
+  const progressFill = document.getElementById('progressFill');
+  const viewport = document.getElementById('viewport');
+  const tocModal = document.getElementById('tocModal');
+  const tocGrid = document.getElementById('tocGrid');
+
+  // Khởi tạo Mục lục 35 slides
+  slides.forEach((slide, idx) => {
+    const title = slide.querySelector('.slide-title-text')?.innerText || (idx === 0 ? "Bìa Bài Giảng" : "Tổng Kết");
+    const item = document.createElement('div');
+    item.className = 'toc-item';
+    item.innerText = `${idx + 1}. ${title}`;
+    item.onclick = () => { goToSlide(idx); toggleTOC(); };
+    tocGrid.appendChild(item);
+  });
+
+  function showSlide(index) {
+    slides.forEach((s, i) => s.classList.toggle('active', i === index));
+    indicator.innerText = `Slide ${index + 1} / ${slides.length}`;
+    progressFill.style.width = `${((index + 1) / slides.length) * 100}%`;
+    viewport.classList.toggle('dark', slides[index].classList.contains('dark'));
+  }
+
+  function goToSlide(index) {
+    currentSlide = index;
+    showSlide(currentSlide);
+  }
+
+  function nextSlide() {
+    if (currentSlide < slides.length - 1) { currentSlide++; showSlide(currentSlide); }
+  }
+
+  function prevSlide() {
+    if (currentSlide > 0) { currentSlide--; showSlide(currentSlide); }
+  }
+
+  function toggleTOC() {
+    tocModal.style.display = tocModal.style.display === 'flex' ? 'none' : 'flex';
+  }
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      viewport.requestFullscreen().catch(err => alert("Trình duyệt chặn Fullscreen"));
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+  // MINIGAME LOGIC: CHỌN SAI KHÔNG LỘ ĐÁP ÁN
+  function checkAnswer(quizNum, isCorrect) {
+    const fb = document.getElementById(`fb-${quizNum}`);
+    const iconBox = document.getElementById(`quiz-icon-${quizNum}`);
+    
+    if (isCorrect) {
+      fb.className = "feedback-box correct";
+      fb.style.display = "block";
+      fb.innerHTML = "Chính xác! 🎉<br><span style='font-size:14px; font-weight:500;'>Bạn đã nắm vững quy định của Bộ luật Dân sự 2015.</span>";
+      
+      iconBox.innerHTML = "<div class='vector-cartoon'><div style='font-size:64px; font-weight:800; color:#ea580c;'>100%</div><div class='cartoon-tag' style='margin-top:10px;'>Chính Xác Xuất Sắc!</div></div>";
+    } else {
+      fb.className = "feedback-box wrong";
+      fb.style.display = "block";
+      fb.innerHTML = "Chưa chính xác, hãy chọn lại! ❌";
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+    if (e.key === 'ArrowLeft') prevSlide();
+    if (e.key === 'Escape' && tocModal.style.display === 'flex') toggleTOC();
+  });
+</script>
+</body>
+</html>
